@@ -63,8 +63,8 @@ module.exports = function(patches){
             [p.field]: p.value
         };
 
-        const pathSplit = p.path.split('.');
-        const keyName = pathSplit[pathSplit.length - 1];
+        const fieldPathSplit = p.field.split('.');
+        const keyName = fieldPathSplit[fieldPathSplit.length - 1];
         if (keyName === '_id' && p.value.length === 24) {
             update.$pull[toDot(p.path)] = {
                 [p.field]: new ObjectId(p.value)
