@@ -1,4 +1,5 @@
 var toDot = require('jsonpath-to-dot');
+const {ObjectId} = require('mongodb');
 
 module.exports = function(patches){
   var update = {};
@@ -61,6 +62,14 @@ module.exports = function(patches){
         update.$pull[toDot(p.path)] = {
             [p.field]: p.value
         };
+
+        const pathSplit = p.path.split('.');
+        const keyName = pathSplit[pathSplit.length - 1];
+        if (keyName === '_id' && p.value.length === 24) {
+            update.$pull[toDot(p.path)] = {
+                [p.field]: new ObjectId(p.value)
+            };
+        }
     }
     else if(p.op !== 'test') {
         throw new Error('Unsupported Operation! op = ' + p.op);
