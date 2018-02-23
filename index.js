@@ -56,8 +56,14 @@ module.exports = function(patches){
       if(!update.$set) update.$set = {};
       update.$set[toDot(p.path)] = p.value;
     }
+    else if(p.op === 'removeAt') {
+        if(!update.$pull) update.$pull = {};
+        update.$pull[toDot(p.path)] = {
+            [p.field]: p.value
+        };
+    }
     else if(p.op !== 'test') {
-      throw new Error('Unsupported Operation! op = ' + p.op);
+        throw new Error('Unsupported Operation! op = ' + p.op);
     }
   });
   return update;
